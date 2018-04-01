@@ -1,9 +1,9 @@
-$( document ).ready(function() {
+$(document).ready(function() {
     $('#search_section').hide();
     update_view();
 
     // form validation
-    $('#file_input').change(function(){
+    $('#file_input').change(function() {
         var file = this.files[0];
         var name = file.name;
         var size = file.size;
@@ -12,14 +12,14 @@ $( document ).ready(function() {
         //Your validation
         allowed_filetypes = ["video/mov", "video/mpeg4", "video/mp4", "video/avi"];
 
-        if ( !allowed_filetypes.includes(type) )
+        if (!allowed_filetypes.includes(type))
             $('#upload_err_msg').append("Upload must be a mov/mpeg4/mp4/avi video file.");
-        else if ( size>500000000 || size<0 )
+        else if (size > 500000000 || size < 0)
             $('#upload_err_msg').append(size);
         else
             video_id = randId()
-            $('#video_id').val(video_id);
-            submit_form(video_id);
+        $('#video_id').val(video_id);
+        submit_form(video_id);
     });
 
     // generate unique ID for each video upload
@@ -27,7 +27,7 @@ $( document ).ready(function() {
         return Math.random().toString(36).substr(2, 10);
     }
 
-    function submit_form(video_id) {    
+    function submit_form(video_id) {
         var formData = new FormData($('#upload_form')[0]);
         $.ajax({
             url: '/upload_video',
@@ -53,7 +53,7 @@ $( document ).ready(function() {
             type: 'GET',
             success: function(data) {
                 // repopulate the view
-                
+
                 data = JSON.parse(data);
 
                 $('.upload_row').remove();
@@ -61,11 +61,11 @@ $( document ).ready(function() {
                     entity = data.uploads[i];
 
                     orig_filename = entity.orig_filename;
-                    upload_time = new Date( Math.round(entity.upload_time) * 1000);
+                    upload_time = new Date(Math.round(entity.upload_time) * 1000);
                     status = entity.status;
                     video_id = entity.video_id
 
-                    $( "#uploads_table_rows" ).append("<tr class='upload_row center' id='" + video_id +"'><td>" + orig_filename + "</td><td>" + upload_time + "</td><td>" + status + "</td></tr>");
+                    $("#uploads_table_rows").append("<tr class='upload_row center' id='" + video_id + "'><td>" + orig_filename + "</td><td>" + upload_time + "</td><td>" + status + "</td></tr>");
                 }
             }
         });
@@ -76,7 +76,9 @@ $( document ).ready(function() {
         $.ajax({
             url: '/process_video',
             type: 'GET',
-            data: {'video_id': video_id},
+            data: {
+                'video_id': video_id
+            },
             success: function(data) {
                 //move items from processing section to library
                 update_view();
@@ -85,7 +87,7 @@ $( document ).ready(function() {
     }
 
     // after user stops typing query, send  query to server
-    $('#search_box').keyup(_.debounce(function(){
+    $('#search_box').keyup(_.debounce(function() {
         var query = $('#search_box').val();
 
         if (query == "") {
@@ -105,38 +107,40 @@ $( document ).ready(function() {
             $.ajax({
                 url: '/search',
                 type: 'GET',
-                data: {'q': query},
+                data: {
+                    'q': query
+                },
                 success: function(data) {
                     data = JSON.parse(data);
-                    for (var i=0; i < data.length; i++) {
+                    for (var i = 0; i < data.length; i++) {
                         res = data[i];
-                        $( "#search_table_rows" ).append("<tr class='search_row center' id='" + res.video_id + "'><td>" 
-                            + res.video_id + "</td><td>" + res.content + "</td><td>" + Math.round(res.start_time) + "</td><td>" 
-                            + Math.round(res.end_time) + "</td><td>" + res.score + "</td></tr>");
+                        $("#search_table_rows").append("<tr class='search_row center' id='" + res.video_id + "'><td>" +
+                            res.video_id + "</td><td>" + res.content + "</td><td>" + Math.round(res.start_time) + "</td><td>" +
+                            Math.round(res.end_time) + "</td><td>" + res.score + "</td></tr>");
                     }
                 }
             });
         }
-    } , 300));
+    }, 300));
 });
 
 // special event handler for class that doesn't belong to any DOM yet
-$(document).on('click', '#search_table_rows tr.search_row', function(e){
-        // get the video_id and start_time
-        video_id = this.id;
-        start_time = $(this).find('td:eq(2)').html();
+$(document).on('click', '#search_table_rows tr.search_row', function(e) {
+    // get the video_id and start_time
+    video_id = this.id;
+    start_time = $(this).find('td:eq(2)').html();
 
-        // update the video
-        src = '/uploads/' + video_id + '#t=' + start_time;
-        $("#mp4_video").html("<source src='" + src +"' type='video/mp4'></source>" );
+    // update the video
+    src = '/uploads/' + video_id + '#t=' + start_time;
+    $("#mp4_video").html("<source src='" + src + "' type='video/mp4'></source>");
 });
 
 // special event handler for class that doesn't belong to any DOM yet
-$(document).on('click', '#uploads_table_rows tr.upload_row', function(e){
-        // get the video_id and start_time
-        video_id = this.id;
+$(document).on('click', '#uploads_table_rows tr.upload_row', function(e) {
+    // get the video_id and start_time
+    video_id = this.id;
 
-        // update the video
-        src = '/uploads/' + video_id;
-        $("#uploads_mp4_video").html("<source src='" + src +"' type='video/mp4'></source>" );
+    // update the video
+    src = '/uploads/' + video_id;
+    $("#uploads_mp4_video").html("<source src='" + src + "' type='video/mp4'></source>");
 });

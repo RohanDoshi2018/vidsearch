@@ -1,8 +1,8 @@
-VidSearch - Search for objects and speech within your videos!
+# VidSearch - Search for objects and speech within your videos!
 
 The world produces more and more video each day. In fact, 300 hours of YouTube is uploaded every minute. But, labeling each frame (e.g. key objects and words) and indexing it manually is impossible, making it difficult to find what you really want in your sea of videos.
 
-Problem Use Cases:
+Examples of The Problem:
 1. Film producers lose hundreds of hours watching footage to find the right clip.
 2. Families lose valuable time going through all their old footage to find the right content.
 3. Guards are unable to watch hundreds of days of security footage to find hints of criminal activity.
@@ -14,9 +14,15 @@ Users upload videos. Our system goes frame by frame, breaking the video into coh
 Technologies:
 
 NoSQL: Google Cloud Datastore
+
 Audio/Video Media Storage: Google Cloud Storage
+
 Video Object Recognition: Google Cloud Video Intelligence
+
 Video To Audio: ffmpeg, sox
+
 Audio To Text: Google Speech API
+
 Web Framework: Flask
+
 Frontend: jQuery

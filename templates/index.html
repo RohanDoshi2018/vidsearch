@@ -1,96 +1,82 @@
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>VidSearch</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="static/style.css">
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-
-      <!-- Logo  -->   
-      <a class="navbar-brand" href="#">VidSearch</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-   
-      <!-- Search Bar  -->   
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <form class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search for object, phrase, filename, ..." aria-label="Search"  id="search_box">
-        </form>
+   <head>
+      <meta charset="utf-8">
+      <title>VidSearch</title>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+      <link rel="stylesheet" href="static/style.css">
+   </head>
+   <body>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+         <!-- Logo  -->   
+         <a class="navbar-brand" href="#">VidSearch</a>
+         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+         <span class="navbar-toggler-icon"></span>
+         </button>
+         <!-- Search Bar  -->   
+         <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <form class="form-inline my-2 my-lg-0">
+               <input class="form-control mr-sm-2" type="search" placeholder="Search for object, phrase, filename, ..." aria-label="Search"  id="search_box">
+            </form>
+         </div>
+         <!-- Upload File -->      
+         <form method=post enctype=multipart/form-data action="/upload_video" id="upload_form">
+            <label for="file_input" class="btn-primary" id="upload_file_button">Select Video</label>
+            <input id="file_input" style="visibility:hidden;" type="file" name=file>
+            <input type="hidden" id="video_id" name="video_id">
+         </form>
+         <div id="upload_err_msg"></div>
+      </nav>
+      <div class="container">
+         <!-- Media Listing -->   
+         <h1 id="main_title">
+         Uploads
+         <h1>
+         <div class="row" id="uploads_section">
+            <div class="col-md-4">
+               <video width="400" controls id="uploads_mp4_video">
+               </video>
+            </div>
+            <div class="col-md-8">
+               <table class="table"  id="uploads_table">
+                  <thead class="thead-dark">
+                     <tr>
+                        <th scope="col" class="center">File</th>
+                        <th scope="col" class="center">Time</th>
+                        <th scope="col" class="center">Status</th>
+                     </tr>
+                  </thead>
+                  <tbody id="uploads_table_rows">
+                  </tbody>
+               </table>
+            </div>
+         </div>
+         <!-- Search Results -->   
+         <div class="row" id="search_section">
+            <div class="col-md-4">
+               <video width="400" controls id="mp4_video">
+               </video>
+            </div>
+            <div class="col-md-8">
+               <table class="table" >
+                  <thead class="thead-dark">
+                     <tr>
+                        <th scope="col" class="center">File</th>
+                        <th scope="col" class="center">Content</th>
+                        <th scope="col" class="center">Start Time</th>
+                        <th scope="col" class="center">End Time</th>
+                        <th scope="col" class="center">Score</th>
+                     </tr>
+                  </thead>
+                  <tbody id="search_table_rows">
+                  </tbody>
+               </table>
+            </div>
+         </div>
       </div>
-
-      <!-- Upload File -->      
-      <form method=post enctype=multipart/form-data action="/upload_video" id="upload_form">
-        <label for="file_input" class="btn-primary" id="upload_file_button">Select Video</label>
-        <input id="file_input" style="visibility:hidden;" type="file" name=file>
-        <input type="hidden" id="video_id" name="video_id">
-      </form>
-      <div id="upload_err_msg"></div>
-
-    </nav>
-
-
-    <div class="container">
-
-      <!-- Media Listing -->   
-      <h1 id="main_title">Uploads<h1>
-
-
-      <div class="row" id="uploads_section">
-        <div class="col-md-4">
-          <video width="400" controls id="uploads_mp4_video">
-          </video>
-        </div>
-        <div class="col-md-8">
-          <table class="table"  id="uploads_table">
-            <thead class="thead-dark">
-              <tr>
-                <th scope="col" class="center">File</th>
-                <th scope="col" class="center">Time</th>
-                <th scope="col" class="center">Status</th>
-              </tr>
-            </thead>
-            <tbody id="uploads_table_rows">
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Search Results -->   
-
-      <div class="row" id="search_section">
-        <div class="col-md-4">
-          <video width="400" controls id="mp4_video">
-          </video>
-        </div>
-        <div class="col-md-8">
-          
-          <table class="table" >
-            <thead class="thead-dark">
-              <tr>
-                <th scope="col" class="center">File</th>
-                <th scope="col" class="center">Content</th>
-                <th scope="col" class="center">Start Time</th>
-                <th scope="col" class="center">End Time</th> 
-                <th scope="col" class="center">Score</th> 
-              </tr>
-            </thead>  
-            <tbody id="search_table_rows">
-            </tbody>
-          </table>
-
-        </div>
-      </div>
-
-    </div>
-
-
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script src=" {{ url_for('static', filename='debounce.js') }} "></script> 
-    <script src=" {{ url_for('static', filename='index.js') }} "></script>
-</body>
+      <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+      <script src=" {{ url_for('static', filename='debounce.js') }} "></script> 
+      <script src=" {{ url_for('static', filename='index.js') }} "></script>
+   </body>
 </html>

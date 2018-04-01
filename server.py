@@ -297,13 +297,6 @@ def word_similarity(a,b):
               score_list.append(sim)
     return sum(score_list) / len(score_list)
 
-@app.route('/uploads/<filename>')
-def uploaded_file(filename):
-    # example use:
-    # return redirect(url_for('uploaded_file', filename=filename))
-
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
-
 def allowed_file(filename, filetype):
     return '.' in filename and filetype in ALLOWED_EXTENSIONS
 
