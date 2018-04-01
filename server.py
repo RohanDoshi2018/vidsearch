@@ -250,8 +250,6 @@ def search_video():
   query.add_filter('confidence', '>=', .5)
   search_tags = list(query.fetch())
 
-  print(search_tags, file=sys.stderr)
-
   tag_scores = []
 
   for tag in search_tags:
@@ -275,9 +273,6 @@ def search_video():
   num_elem = min(20, len(tag_scores)-1)
   ans = sorted(tag_scores, key=lambda k: k['score'], reverse=True)[:num_elem]
 
-  print(json.dumps(ans), file=sys.stderr)
-
-
   return json.dumps(ans), 200, {'ContentType':'application/json'}
 
 def get_tag_score(query, text, confidence):
@@ -297,8 +292,6 @@ def sent_similarity(a,b):
     for w1 in a:
         for w2 in b:
             sim = word_similarity(w1, w2)
-            # if w1 in model.vocab and w2 in model.vocab:
-            # sim = model.similarity(w1, w2)
             score_list.append(sim)
     if sum(score_list) == 0 or len(score_list) == 0:
       return 0
@@ -340,5 +333,4 @@ def uploaded_file(filename):
 
 # Run the server app
 if __name__ == "__main__":
-  # model = gensim.models.KeyedVectors.load_word2vec_format('GoogleNews-vectors-negative300.bin', binary=True)
   app.run(debug = True)
