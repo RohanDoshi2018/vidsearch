@@ -9,7 +9,8 @@ from werkzeug.utils import secure_filename
 from google.cloud import storage, datastore, videointelligence, speech 
 from google.cloud.speech import enums, types
 import moviepy.editor as mp
-import gensim
+# import gensim
+from nltk.corpus import wordnet
 
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = set(['mov', 'mpeg4', 'mp4', 'avi'])
@@ -237,9 +238,9 @@ def upload_blob(bucket_name, source_file_name, destination_blob_name):
 
 @app.route("/search")
 def search_video():
-
-  print(url_for('uploaded_file', filename='3wl3e2i7t0.mp4'), file=sys.stderr)
-
+  
+  print("Searching Tags", file=sys.stderr)
+  
   q = request.args.get('q')
   q_arr = q.strip().split(' ')
 
@@ -249,10 +250,15 @@ def search_video():
   query.add_filter('confidence', '>=', .5)
   search_tags = list(query.fetch())
 
+  print(search_tags, file=sys.stderr)
+
   tag_scores = []
 
   for tag in search_tags:
       score = get_tag_score(q, tag['content'], tag['confidence'])
+
+      print("score", file=sys.stderr)
+      print(score, file=sys.stderr)
 
       # extract info from tags
       tag_dict = {
@@ -274,8 +280,6 @@ def search_video():
 
   return json.dumps(ans), 200, {'ContentType':'application/json'}
 
-  # return json.dumps({'results': ans}), 200, {'ContentType':'application/json'}
-
 def get_tag_score(query, text, confidence):
     """ calculate the tag score based on the query as well as the the tag's text and confidence """
 
@@ -284,17 +288,41 @@ def get_tag_score(query, text, confidence):
     text = text.strip().split(' ')
     text = [x for x in text if x != ';']
 
-    return confidence * word_similarity(query, text)
+    return confidence * sent_similarity(query, text)
 
-def word_similarity(a,b):
+def sent_similarity(a,b):
     """ calculate the average cosine similarity for list of words a and b """
     score_list = []
+
     for w1 in a:
         for w2 in b:
-            if w1 in model.vocab and w2 in model.vocab:
-              sim = model.similarity(w1, w2)
-              score_list.append(sim)
-    return sum(score_list) / len(score_list)
+            sim = word_similarity(w1, w2)
+            # if w1 in model.vocab and w2 in model.vocab:
+            # sim = model.similarity(w1, w2)
+            score_list.append(sim)
+    if sum(score_list) == 0 or len(score_list) == 0:
+      return 0
+    else:
+      return sum(score_list) / len(score_list)
+
+def word_similarity(wordOne, wordTwo):
+  synOne = wordnet.synsets(wordOne)
+  synTwo = wordnet.synsets(wordTwo)
+  score = 0
+  scoreList = []
+  for indexOne in range (0, len(synOne)):
+    for indexTwo in range (0, len(synTwo)):
+      score = synOne[indexOne].wup_similarity(synTwo[indexTwo])
+      if score is not None:
+        scoreList.append(score)
+  sum = 0
+  for num in scoreList:
+    sum = sum + num
+
+  if len(scoreList) == 0:
+    return 0
+  else: 
+    return sum / (len(scoreList))
 
 def allowed_file(filename, filetype):
     return '.' in filename and filetype in ALLOWED_EXTENSIONS
@@ -306,7 +334,11 @@ def upload_blob(bucket_name, source_file_name, destination_blob_name):
   blob = bucket.blob(destination_blob_name)
   blob.upload_from_filename(source_file_name)
 
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
 # Run the server app
 if __name__ == "__main__":
-  model = gensim.models.KeyedVectors.load_word2vec_format('GoogleNews-vectors-negative300.bin', binary=True)
+  # model = gensim.models.KeyedVectors.load_word2vec_format('GoogleNews-vectors-negative300.bin', binary=True)
   app.run(debug = True)
