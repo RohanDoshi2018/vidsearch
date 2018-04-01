@@ -291,9 +291,8 @@ def word_similarity(a,b):
     score_list = []
     for w1 in a:
         for w2 in b:
-            # if w1 in model.vocab and w2 in model.vocab:
-                # sim = model.similarity(w1, w2)
-              sim = .7
+            if w1 in model.vocab and w2 in model.vocab:
+              sim = model.similarity(w1, w2)
               score_list.append(sim)
     return sum(score_list) / len(score_list)
 
@@ -309,5 +308,5 @@ def upload_blob(bucket_name, source_file_name, destination_blob_name):
 
 # Run the server app
 if __name__ == "__main__":
-  # model = gensim.models.KeyedVectors.load_word2vec_format('GoogleNews-vectors-negative300.bin', binary=True)
+  model = gensim.models.KeyedVectors.load_word2vec_format('GoogleNews-vectors-negative300.bin', binary=True)
   app.run(debug = True)
