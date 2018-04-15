@@ -102,7 +102,6 @@ $(document).ready(function() {
             $('#uploads_section').hide();
             $('#search_section').show();
             $('#main_title').text("Searching");
-            alert("refresh");
 
             $.ajax({
                 url: '/search',
@@ -112,7 +111,6 @@ $(document).ready(function() {
                 },
                 success: function(data) {
                     data = JSON.parse(data);
-                    alert(data);
                     $('.search_row').remove();
                     for (var i = 0; i < data.length; i++) {
                         res = data[i];

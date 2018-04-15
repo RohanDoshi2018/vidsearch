@@ -1,5 +1,32 @@
 # VidSearch - Search for objects and speech in your videos
 
+## Installation
+
+install conda 3.6.3 for OSX
+
+make sure you have vidsearch_service_account.json in the main vidsearch folder you cloned from GitHub
+
+conda create --name vidsearch --file requirements.txt
+
+source activate vidsearch
+
+Install the Google Cloud SDK (install folder locally): https://cloud.google.com/sdk/docs/quickstart-macos
+
+source ~/.bashrc
+
+pip install --upgrade google-cloud-videointelligence
+
+pip install --upgrade google-cloud-datastore
+
+pip install --upgrade google-cloud-storage
+
+pip install --upgrade google-cloud-speech
+
+pip install moviepy
+
+bash run.sh
+
+
 ## Inspiration
 Imagine you are a parent digging through countless family recordings for a memory. Or, a video producer painstakingly scrubbing through hundreds of hours of content for a scene. Or,  a guard looking through a barrage of security footage for criminal activity.
 
