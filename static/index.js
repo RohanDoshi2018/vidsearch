@@ -91,18 +91,18 @@ $(document).ready(function() {
         var query = $('#search_box').val();
 
         if (query == "") {
-            $('.seach_row').remove();
+            $('.search_row').remove();
             $('#uploads_section').show();
             $('#search_section').hide();
             $('#main_title').text("Uploads");
             update_view();
 
         } else {
-            $('.seach_row').remove();
+            $('.search_row').remove();
             $('#uploads_section').hide();
             $('#search_section').show();
             $('#main_title').text("Searching");
-
+            alert("refresh");
 
             $.ajax({
                 url: '/search',
@@ -112,6 +112,8 @@ $(document).ready(function() {
                 },
                 success: function(data) {
                     data = JSON.parse(data);
+                    alert(data);
+                    $('.search_row').remove();
                     for (var i = 0; i < data.length; i++) {
                         res = data[i];
                         $("#search_table_rows").append("<tr class='search_row center' id='" + res.video_id + "'><td>" +
@@ -121,7 +123,7 @@ $(document).ready(function() {
                 }
             });
         }
-    }, 300));
+    }, 500));
 });
 
 // special event handler for class that doesn't belong to any DOM yet
